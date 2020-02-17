@@ -5,6 +5,10 @@
 
 void setup() {
   int i;
+  TCCR1A = 0x00;
+  TCCR1B = 0x04;
+  TIMSK1 = 0x01;
+  TCNT1 = 100;
 
   for (i = 0; i < 16; i++) {
     pinMode(i + 2, OUTPUT);
@@ -37,36 +41,63 @@ unsigned long c_millis = 0;
 unsigned long p_millis = 0;
 
 int count = 0;
+
+ISR(TIMER1_OVF_vect)
+{
+  TCNT1 = 100;
+  for (int j = 0; j < 8; j++) {
+    digitalWrite(j + 10, HIGH);
+    for (int i = 0; i < 8; i++) {
+      if (num_all[count][j] & (0x80 >> i)) {
+        digitalWrite(i + 2 , LOW);
+      }
+      else {
+        digitalWrite(i + 2 , HIGH);
+      }
+    }
+
+    //---------------------------OFF ALL
+    for (int i = 0; i < 18; i++) {
+      digitalWrite(i + 2, HIGH);
+
+      if (i >= 8) {
+        digitalWrite(i + 2, LOW);
+      }
+    }
+    //---------------------------
+  }
+}
+
 void loop() {
   int i, j = 0;
   c_micros = micros();
   c_millis = millis();
 
-  if (c_micros - p_micros > 2500) {
-    p_micros = c_micros;
-
-    for (j = 0; j < 8; j++) {
-      digitalWrite(j + 10, HIGH);
-      for (i = 0; i < 8; i++) {
-        if (num_all[count][j] & (0x80 >> i)) {
-          digitalWrite(i + 2 , LOW);
-        }
-        else {
-          digitalWrite(i + 2 , HIGH);
-        }
-      }
-
-      //---------------------------OFF ALL
-      for (i = 0; i < 18; i++) {
-        digitalWrite(i + 2, HIGH);
-
-        if (i >= 8) {
-          digitalWrite(i + 2, LOW);
-        }
-      }
-      //---------------------------
-    }
-  }
+//  if (c_micros - p_micros > 2500) {
+//    p_micros = c_micros;
+//
+//    for (int j = 0; j < 8; j++) {
+//      digitalWrite(j + 10, HIGH);
+//      for (int i = 0; i < 8; i++) {
+//        if (num_all[count][j] & (0x80 >> i)) {
+//          digitalWrite(i + 2 , LOW);
+//        }
+//        else {
+//          digitalWrite(i + 2 , HIGH);
+//        }
+//      }
+//
+//      //---------------------------OFF ALL
+//      for (int i = 0; i < 18; i++) {
+//        digitalWrite(i + 2, HIGH);
+//
+//        if (i >= 8) {
+//          digitalWrite(i + 2, LOW);
+//        }
+//      }
+//      //---------------------------
+//    }
+//  }
 
 
   if (c_millis - p_millis >= 1000) {
