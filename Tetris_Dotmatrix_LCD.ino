@@ -25,9 +25,9 @@ void setup() {
   Serial.begin(9600);
 }
 
+
 int block[8] = {0x10, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-int background[10] = { 0xFF, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
-};
+int background[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
 unsigned long c_micros = 0;
 unsigned long p_micros = 0;
 unsigned long c_millis = 0;
@@ -40,6 +40,30 @@ int count = 0;
 //  TCNT1 = 100;
 //}
 
+
+int overlap_check() {
+  for (int i = 8; i >= 0; i--) {
+    block[i] = block[i - 1];
+  }
+  block[0] = 0x00;
+
+  for (int j = 0; j < 8; j++) {
+    if (block[j] & background[j]) {
+      for (int i = 0; i < 8; i++) {
+        block[i] = block[i + 1];
+      }
+      block[8] = 0x00;
+
+      return 1;
+    }
+  }
+  for (int i = 0; i < 8; i++) {
+    block[i] = block[i + 1];
+  }
+  block[8] = 0x00;
+
+  return 0;
+}
 
 void loop() {
   c_micros = micros();
@@ -76,10 +100,13 @@ void loop() {
     p_millis = c_millis;
 
     //---------------------------DOWN SHIFT
-    for (int i = 7; i >= 0; i--) {
-      block[i] = block[i - 1];
+    if (!overlap_check()) {
+      //memmove(block + 1, block, sizeof(int) * 8);
+      for (int i = 8; i >= 0; i--) {
+        block[i] = block[i - 1];
+      }
+      block[0] = 0x00;
     }
-    block[0] = 0x00;
     //---------------------------
   }
 
