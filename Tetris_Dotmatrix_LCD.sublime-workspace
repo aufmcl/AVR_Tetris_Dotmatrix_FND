@@ -1,0 +1,209 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "//column 저항 연결\n//2~9 column, 10~17 row\n//column LOW, row에 HIGH 일 때 ON\n\n\nvoid setup() {\n  int i;\n  TCCR1A = 0x00;\n  TCCR1B = 0x04;\n  TIMSK1 = 0x01;\n  TCNT1 = 100;\n\n  for (i = 0; i < 16; i++) {\n    pinMode(i + 2, OUTPUT);\n  }\n\n  for (i = 0; i < 18; i++) {\n    digitalWrite(i + 2, HIGH);\n\n    if (i >= 8) {\n      digitalWrite(i + 2, LOW);\n    }\n  }\n}\n\nconst int num_all[10][8] = {\n  {0x00, 0x38, 0x44, 0x4c, 0x54, 0x64, 0x44, 0x38},\n  {0x00, 0x10, 0x30, 0x50, 0x10, 0x10, 0x10, 0x7c},\n  {0x00, 0x38, 0x44, 0x04, 0x08, 0x10, 0x20, 0x7c},\n  {0x00, 0x38, 0x44, 0x04, 0x18, 0x04, 0x44, 0x38},\n  {0x00, 0x08, 0x18, 0x28, 0x48, 0x7c, 0x08, 0x08},\n  {0x00, 0x7c, 0x40, 0x78, 0x04, 0x04, 0x44, 0x38},\n  {0x00, 0x38, 0x40, 0x40, 0x78, 0x44, 0x44, 0x38},\n  {0x00, 0x7c, 0x04, 0x08, 0x10, 0x20, 0x20, 0x20},\n  {0x00, 0x38, 0x44, 0x44, 0x38, 0x44, 0x44, 0x38},\n  {0x00, 0x38, 0x44, 0x44, 0x3c, 0x04, 0x44, 0x38}\n};\n\nint block[8] = {0x10, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};\nunsigned long c_micros = 0;\nunsigned long p_micros = 0;\nunsigned long c_millis = 0;\nunsigned long p_millis = 0;\n\nint count = 0;\n\nISR(TIMER1_OVF_vect)\n{\n  TCNT1 = 100;\n  //  for (int j = 0; j < 8; j++) {\n  //    digitalWrite(j + 10, HIGH);\n  //    for (int i = 0; i < 8; i++) {\n  //      if (num_all[count][j] & (0x80 >> i)) {\n  //        digitalWrite(i + 2 , LOW);\n  //      }\n  //      else {\n  //        digitalWrite(i + 2 , HIGH);\n  //      }\n  //    }\n  //\n  //    //---------------------------OFF ALL\n  //    for (int i = 0; i < 18; i++) {\n  //      digitalWrite(i + 2, HIGH);\n  //\n  //      if (i >= 8) {\n  //        digitalWrite(i + 2, LOW);\n  //      }\n  //    }\n  //    //---------------------------\n  //  }\n}\n\nvoid show_num() {\n  for (int j = 0; j < 8; j++) {\n    digitalWrite(j + 10, HIGH);\n    for (int i = 0; i < 8; i++) {\n      if (num_all[count][j] & (0x80 >> i)) {\n        digitalWrite(i + 2 , LOW);\n      }\n      else {\n        digitalWrite(i + 2 , HIGH);\n      }\n    }\n\n    //---------------------------OFF ALL\n    for (int i = 0; i < 18; i++) {\n      digitalWrite(i + 2, HIGH);\n\n      if (i >= 8) {\n        digitalWrite(i + 2, LOW);\n      }\n    }\n    //---------------------------\n  }\n}\n\nvoid loop() {\n  c_micros = micros();\n  c_millis = millis();\n\n  if (c_micros - p_micros > 2500) {\n    p_micros = c_micros;\n\n    for (int j = 0; j < 8; j++) {\n      digitalWrite(j + 10, HIGH);\n      for (int i = 0; i < 8; i++) {\n        if (block[j] & (0x80 >> i)) {\n          digitalWrite(i + 2 , LOW);\n        }\n        else {\n          digitalWrite(i + 2 , HIGH);\n        }\n      }\n\n    //---------------------------OFF ALL\n      for (int i = 0; i < 18; i++) {\n        digitalWrite(i + 2, HIGH);\n\n        if (i >= 8) {\n          digitalWrite(i + 2, LOW);\n        }\n      }\n    //---------------------------\n    }\n  }\n\n\n  if (c_millis - p_millis >= 1000) {\n    p_millis = c_millis;\n    for (int i = 0; i < 8; i++) {\n      block[i + 1] = block[i];\n      \n    }\n\n    count++;\n    if (count >= 10)  count = 0;\n  }\n\n}",
+			"file": "/C/Users/JiwanHan/Desktop/Tetris_Dotmatrix_LCD.cpp",
+			"file_size": 3106,
+			"file_write_time": 132265051589567393,
+			"settings":
+			{
+				"buffer_size": 2986,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "//column 저항 연결"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/JiwanHan/Desktop/Tetris_Dotmatrix_LCD.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2986,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								2986
+							]
+						],
+						"settings":
+						{
+							"auto_name": "//column 저항 연결",
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1570.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Tetris_Dotmatrix_LCD.sublime-project",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
