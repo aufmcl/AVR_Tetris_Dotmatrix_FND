@@ -33,8 +33,6 @@ unsigned long p_micros = 0;
 unsigned long c_millis = 0;
 unsigned long p_millis = 0;
 
-int count = 0;
-
 //ISR(TIMER1_OVF_vect)
 //{
 //  TCNT1 = 100;
@@ -42,26 +40,11 @@ int count = 0;
 
 
 int overlap_check() {
-  for (int i = 8; i >= 0; i--) {
-    block[i] = block[i - 1];
-  }
-  block[0] = 0x00;
-
-  for (int j = 0; j < 8; j++) {
+  for (int j = 0; j < 8; j++) {    
     if (block[j] & background[j]) {
-      for (int i = 0; i < 8; i++) {
-        block[i] = block[i + 1];
-      }
-      block[8] = 0x00;
-
       return 1;
-    }
-  }
-  for (int i = 0; i < 8; i++) {
-    block[i] = block[i + 1];
-  }
-  block[8] = 0x00;
-
+    }    
+  }  
   return 0;
 }
 
