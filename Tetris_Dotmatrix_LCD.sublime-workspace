@@ -21,8 +21,16 @@
 			"file": "/C/Users/JiwanHan/Desktop/Tetris_Dotmatrix_LCD.cpp",
 			"settings":
 			{
-				"buffer_size": 2577,
+				"buffer_size": 2442,
 				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/JiwanHan/Documents/Dev-C++/Test/main.cpp",
+			"settings":
+			{
+				"buffer_size": 998,
 				"line_ending": "Windows"
 			}
 		}
@@ -59,6 +67,7 @@
 	},
 	"file_history":
 	[
+		"/C/Users/JiwanHan/Documents/Arduino/Tetris_Dotmatrix_LCD/Tetris_Dotmatrix_LCD.ino",
 		"/C/Users/JiwanHan/Desktop/Tetris_Dotmatrix_LCD.cpp"
 	],
 	"find":
@@ -101,7 +110,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -132,7 +141,7 @@
 						"translation.y": 7670.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -141,15 +150,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2577,
+						"buffer_size": 2442,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1153,
-								1153
+								2442,
+								2442
 							]
 						],
 						"settings":
@@ -157,7 +166,35 @@
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 702.0,
+						"translation.y": 1282.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/JiwanHan/Documents/Dev-C++/Test/main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 998,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								433
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

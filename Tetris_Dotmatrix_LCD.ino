@@ -4,35 +4,40 @@
 
 int edge[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
 const int block[8] = {0x10, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-int falling_block[8] = {0x10, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+int falling_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int fallen_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-int show_block[8];
+int show_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 unsigned long c_micros = 0;
 unsigned long p_micros = 0;
 unsigned long c_millis = 0;
 unsigned long p_millis = 0;
-int flag_crte = 1;
 
 
 int overlap_check() {
   for (int i = 0; i < 8; i++) {
-    if (edge[i] & fallen_block[i]) {
+    if (edge[i] & falling_block[i]) {
+      digitalWrite(18, HIGH);
       return 1;
+    }
+    else {
+      digitalWrite(18, LOW);
     }
   }
   return 0;
 }
 
 void insert_block() {
-  for (int i = 0; i < 8; i++) {    
-    edge[i] |= fallen_block[i];
-    fallen_block[i] = falling_block[i];
+  for (int i = 0; i < 8; i++) {
+    edge[i] |= falling_block[i];
+    fallen_block[i] |= falling_block[i];
   }
 }
 
 void create_block() {
   for (int i = 0; i < 8; i++) {
     falling_block[i] = block[i];
+    show_block[i] = block[i];
+    show_block[i] |= fallen_block[i];
   }
 }
 
@@ -47,16 +52,16 @@ void setup() {
     pinMode(i + 2, OUTPUT);
   }
 
-  for (i = 0; i < 18; i++) {
+  //---------------------------OFF ALL
+  for (int i = 0; i < 16; i++) {
     digitalWrite(i + 2, HIGH);
 
     if (i >= 8) {
       digitalWrite(i + 2, LOW);
     }
   }
-
+  //---------------------------
   create_block();
-
   Serial.begin(9600);
 }
 
@@ -71,7 +76,8 @@ void loop() {
   c_micros = micros();
   c_millis = millis();
 
-  if (c_millis - p_millis >= 1000) {
+  if (c_millis - p_millis > 1000) {
+    Serial.println();
     p_millis = c_millis;
 
     if (!overlap_check()) {
@@ -81,16 +87,14 @@ void loop() {
       }
       falling_block[0] = 0x00;
       //---------------------------
-
-      for (int i = 0; i < 8; i++) {
-        fallen_block[i] = falling_block[i];
-      }
     }
     else {
-      Serial.println("asdff");
-      create_block();
       insert_block();
-      
+      create_block();
+    }
+    for (int i = 0; i < 8; i++) {
+      show_block[i] = falling_block[i];
+      show_block[i] |= fallen_block[i];
     }
   }
 
@@ -102,7 +106,7 @@ void loop() {
 
       //---------------------------DRAW BLOCK
       for (int i = 0; i < 8; i++) {
-        if (fallen_block[j] & (0x80 >> i)) {
+        if (show_block[j] & (0x80 >> i)) {
           digitalWrite(i + 2 , LOW);
         }
         else {
@@ -112,7 +116,7 @@ void loop() {
       //---------------------------
 
       //---------------------------OFF ALL
-      for (int i = 0; i < 18; i++) {
+      for (int i = 0; i < 16; i++) {
         digitalWrite(i + 2, HIGH);
 
         if (i >= 8) {
