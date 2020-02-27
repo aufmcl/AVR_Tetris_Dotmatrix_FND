@@ -14,15 +14,28 @@ unsigned long p_millis = 0;
 
 
 int overlap_check() {
+  for (int i = 8; i >= 0; i--) {
+    falling_block[i] = falling_block[i - 1];
+  }
+  falling_block[0] = 0x00;
+
   for (int i = 0; i < 8; i++) {
     if (edge[i] & falling_block[i]) {
-      digitalWrite(18, HIGH);
+      for (int i = 0; i < 8; i++) {
+        falling_block[i] = falling_block[i + 1];
+      }
+      falling_block[7] = 0x00;
       return 1;
     }
-    else {
-      digitalWrite(18, LOW);
-    }
   }
+  
+  for (int i = 0; i < 8; i++) {
+    falling_block[i] = falling_block[i + 1];
+  }
+  falling_block[7] = 0x00;
+  
+  digitalWrite(18, LOW);
+  
   return 0;
 }
 
