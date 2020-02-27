@@ -30,7 +30,7 @@
 			"file": "/C/Users/JiwanHan/Documents/Dev-C++/Test/main.cpp",
 			"settings":
 			{
-				"buffer_size": 998,
+				"buffer_size": 949,
 				"line_ending": "Windows"
 			}
 		}
@@ -110,7 +110,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -126,8 +126,8 @@
 						"selection":
 						[
 							[
-								15578,
-								15578
+								15081,
+								15081
 							]
 						],
 						"settings":
@@ -138,10 +138,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7670.0,
+						"translation.y": 6806.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -169,7 +169,7 @@
 						"translation.y": 1282.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -178,7 +178,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 998,
+						"buffer_size": 949,
 						"regions":
 						{
 						},
@@ -186,7 +186,7 @@
 						[
 							[
 								0,
-								433
+								0
 							]
 						],
 						"settings":
@@ -197,7 +197,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]

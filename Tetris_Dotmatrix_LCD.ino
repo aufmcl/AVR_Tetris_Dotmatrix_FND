@@ -2,11 +2,11 @@
 //2~9 column, 10~17 row
 //column LOW, row에 HIGH 일 때 ON
 
-int edge[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
 const int block[8] = {0x10, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int falling_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int fallen_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int show_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+int edge[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
 unsigned long c_micros = 0;
 unsigned long p_micros = 0;
 unsigned long c_millis = 0;
@@ -76,10 +76,34 @@ void loop() {
   c_micros = micros();
   c_millis = millis();
 
+
+  //---------------------------KEY EVENT
+  if (Serial.available()) {
+    char key = Serial.read();
+
+    if (key == 'a' || key == 'A') {
+      for (int i = 0; i < 8; i++) {
+        falling_block[i] <<= 1;
+      }
+    }
+    else if (key == 'd' || key == 'D') {
+      for (int i = 0; i < 8; i++) {
+        falling_block[i] >>= 1;
+      }
+    }
+    else if (key == 's' || key == 'S') {
+      for (int i = 8; i >= 0; i--) {
+        falling_block[i] = falling_block[i - 1];
+      }
+      falling_block[0] = 0x00;
+    }
+  }
+  //---------------------------
+
   if (c_millis - p_millis > 1000) {
-    Serial.println();
     p_millis = c_millis;
 
+    Serial.print("");
     if (!overlap_check()) {
       //---------------------------DOWN SHIFT
       for (int i = 8; i >= 0; i--) {
