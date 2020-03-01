@@ -13,29 +13,92 @@ unsigned long c_millis = 0;
 unsigned long p_millis = 0;
 
 
-int overlap_check() {
-  for (int i = 8; i >= 0; i--) {
-    falling_block[i] = falling_block[i - 1];
+void setup() {
+  //  TCCR1A = 0x00;
+  //  TCCR1B = 0x04;
+  //  TIMSK1 = 0x01;
+  //  TCNT1 = 100;
+
+  for (int i = 0; i < 16; i++) {
+    pinMode(i + 2, OUTPUT);
   }
-  falling_block[0] = 0x00;
+
+  //---------------------------OFF ALL
+  for (int i = 0; i < 16; i++) {
+    digitalWrite(i + 2, HIGH);
+
+    if (i >= 8) {
+      digitalWrite(i + 2, LOW);
+    }
+  }
+  //---------------------------
+  create_block();
+  Serial.begin(9600);
+}
+
+
+int overlap_check(int flag) {
+  if (flag == 0) {
+    for (int i = 8; i >= 0; i--) {
+      falling_block[i] = falling_block[i - 1];
+    }
+    falling_block[0] = 0x00;
+  }
+  else if (flag == 1) {
+    for (int i = 0; i < 8; i++) {
+      falling_block[i] <<= 1;
+    }
+  }
+  else if (flag == 2) {
+    for (int i = 0; i < 8; i++) {
+      falling_block[i] >>= 1;
+    }
+  }
+
 
   for (int i = 0; i < 8; i++) {
     if (edge[i] & falling_block[i]) {
-      for (int i = 0; i < 8; i++) {
-        falling_block[i] = falling_block[i + 1];
+      if (flag == 0) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] = falling_block[i + 1];
+        }
+        falling_block[7] = 0x00;
       }
-      falling_block[7] = 0x00;
+      else if (flag == 1) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] >>= 1;
+        }
+      }
+      else if (flag == 2) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] <<= 1;
+        }
+      }
+
+      digitalWrite(18, HIGH);
       return 1;
     }
   }
-  
-  for (int i = 0; i < 8; i++) {
-    falling_block[i] = falling_block[i + 1];
+
+  if (flag == 0) {
+    for (int i = 0; i < 8; i++) {
+      falling_block[i] = falling_block[i + 1];
+    }
+    falling_block[7] = 0x00;
   }
-  falling_block[7] = 0x00;
-  
+  else if (flag == 1) {
+    for (int i = 0; i < 8; i++) {
+      falling_block[i] >>= 1;
+    }
+  }
+  else if (flag == 2) {
+    for (int i = 0; i < 8; i++) {
+      falling_block[i] <<= 1;
+    }
+  }
+
   digitalWrite(18, LOW);
-  
+
   return 0;
 }
 
@@ -54,29 +117,7 @@ void create_block() {
   }
 }
 
-void setup() {
-  int i;
-  //  TCCR1A = 0x00;
-  //  TCCR1B = 0x04;
-  //  TIMSK1 = 0x01;
-  //  TCNT1 = 100;
 
-  for (i = 0; i < 16; i++) {
-    pinMode(i + 2, OUTPUT);
-  }
-
-  //---------------------------OFF ALL
-  for (int i = 0; i < 16; i++) {
-    digitalWrite(i + 2, HIGH);
-
-    if (i >= 8) {
-      digitalWrite(i + 2, LOW);
-    }
-  }
-  //---------------------------
-  create_block();
-  Serial.begin(9600);
-}
 
 //ISR(TIMER1_OVF_vect)
 //{
@@ -95,20 +136,35 @@ void loop() {
     char key = Serial.read();
 
     if (key == 'a' || key == 'A') {
-      for (int i = 0; i < 8; i++) {
-        falling_block[i] <<= 1;
+      if (!overlap_check(1)) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] <<= 1;
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
       }
     }
     else if (key == 'd' || key == 'D') {
-      for (int i = 0; i < 8; i++) {
-        falling_block[i] >>= 1;
+      if (!overlap_check(2)) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] >>= 1;
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
       }
     }
     else if (key == 's' || key == 'S') {
-      for (int i = 8; i >= 0; i--) {
-        falling_block[i] = falling_block[i - 1];
+      if (!overlap_check(0)) {
+        for (int i = 8; i >= 0; i--) {
+          falling_block[i] = falling_block[i - 1];
+        }
+        falling_block[0] = 0x00;
+
+        for (int i = 0; i < 8; i++) {
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
       }
-      falling_block[0] = 0x00;
     }
   }
   //---------------------------
@@ -117,7 +173,7 @@ void loop() {
     p_millis = c_millis;
 
     Serial.print("");
-    if (!overlap_check()) {
+    if (!overlap_check(0)) {
       //---------------------------DOWN SHIFT
       for (int i = 8; i >= 0; i--) {
         falling_block[i] = falling_block[i - 1];

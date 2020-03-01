@@ -30,7 +30,7 @@
 			"file": "/C/Users/JiwanHan/Documents/Dev-C++/Test/main.cpp",
 			"settings":
 			{
-				"buffer_size": 949,
+				"buffer_size": 1029,
 				"line_ending": "Windows"
 			}
 		}
@@ -72,7 +72,7 @@
 	],
 	"find":
 	{
-		"height": 27.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -86,6 +86,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"position",
+			"cur",
+			"Set",
 			"overlap",
 			"insert",
 			"inst",
@@ -126,8 +129,8 @@
 						"selection":
 						[
 							[
-								15081,
-								15081
+								2525,
+								2525
 							]
 						],
 						"settings":
@@ -138,7 +141,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6806.0,
+						"translation.y": 698.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -178,7 +181,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 949,
+						"buffer_size": 1029,
 						"regions":
 						{
 						},
