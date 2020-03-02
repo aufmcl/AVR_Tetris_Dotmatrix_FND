@@ -39,9 +39,7 @@ void setup() {
 
 int overlap_check(int flag) {
   if (flag == 0) {
-    for (int i = 8; i >= 0; i--) {
-      falling_block[i] = falling_block[i - 1];
-    }
+    memmove(falling_block + 1, falling_block, sizeof(int) * 8);
     falling_block[0] = 0x00;
   }
   else if (flag == 1) {
@@ -55,13 +53,10 @@ int overlap_check(int flag) {
     }
   }
 
-
   for (int i = 0; i < 8; i++) {
     if (edge[i] & falling_block[i]) {
       if (flag == 0) {
-        for (int i = 0; i < 8; i++) {
-          falling_block[i] = falling_block[i + 1];
-        }
+        memmove(falling_block - 1, falling_block, sizeof(int) * 8);
         falling_block[7] = 0x00;
       }
       else if (flag == 1) {
@@ -81,9 +76,7 @@ int overlap_check(int flag) {
   }
 
   if (flag == 0) {
-    for (int i = 0; i < 8; i++) {
-      falling_block[i] = falling_block[i + 1];
-    }
+    memmove(falling_block - 1, falling_block, sizeof(int) * 8);
     falling_block[7] = 0x00;
   }
   else if (flag == 1) {
@@ -155,9 +148,7 @@ void loop() {
     }
     else if (key == 's' || key == 'S') {
       if (!overlap_check(0)) {
-        for (int i = 8; i >= 0; i--) {
-          falling_block[i] = falling_block[i - 1];
-        }
+        memmove(falling_block + 1, falling_block, sizeof(int) * 8);
         falling_block[0] = 0x00;
 
         for (int i = 0; i < 8; i++) {
@@ -175,16 +166,33 @@ void loop() {
     Serial.print("");
     if (!overlap_check(0)) {
       //---------------------------DOWN SHIFT
-      for (int i = 8; i >= 0; i--) {
-        falling_block[i] = falling_block[i - 1];
-      }
+      memmove(falling_block + 1, falling_block, sizeof(int) * 8);
       falling_block[0] = 0x00;
       //---------------------------
     }
     else {
+
+      //---------------------------LINE CHECK
+      for (int j = 0; j < 8; j++) {
+        if (show_block[j] == 0x7E) {
+          for (int i = j; i >= 0; i--) {
+            show_block[i] = show_block[i - 1];
+            falling_block[i] = falling_block[i - 1];
+            fallen_block[i] = fallen_block[i - 1];
+            edge[i] = edge[i - 1];
+          }
+          show_block[0] = 0x00;
+          falling_block[0] = 0x00;
+          fallen_block[0] = 0x00;
+          edge[0] = 0x81;
+        }
+      }
+      //---------------------------
+
       insert_block();
       create_block();
     }
+
     for (int i = 0; i < 8; i++) {
       show_block[i] = falling_block[i];
       show_block[i] |= fallen_block[i];
