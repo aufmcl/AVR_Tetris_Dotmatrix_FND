@@ -30,7 +30,7 @@
 			"file": "/C/Users/JiwanHan/Documents/Dev-C++/Test/main.cpp",
 			"settings":
 			{
-				"buffer_size": 1029,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		}
@@ -140,8 +140,8 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 150.0,
-						"translation.y": 8806.0,
+						"translation.x": 0.0,
+						"translation.y": 3182.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -181,7 +181,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1029,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
