@@ -39,6 +39,10 @@ const int block[7][4][8] = {
     {0x3c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
   },
 };
+unsigned long c_micros = 0;
+unsigned long p_micros = 0;
+unsigned long c_millis = 0;
+unsigned long p_millis = 0;
 int falling_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int fallen_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int show_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -46,10 +50,8 @@ int edge[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
 int rotate = 0;
 int y = 0;
 int shape = 0;
-unsigned long c_micros = 0;
-unsigned long p_micros = 0;
-unsigned long c_millis = 0;
-unsigned long p_millis = 0;
+bool flag_right = false, flag_left = false;
+bool flag_up = false, flag_down = false;
 
 
 void setup() {
@@ -57,12 +59,14 @@ void setup() {
   //  TCCR1B = 0x04;
   //  TIMSK1 = 0x01;
   //  TCNT1 = 100;
+  ADMUX = 0x40;
+  ADCSRA = 0x87;
 
   for (int i = 0; i < 16; i++) {
     pinMode(i + 2, OUTPUT);
   }
 
-  //---------------------------OFF ALL
+  //===========================OFF ALL
   for (int i = 0; i < 16; i++) {
     digitalWrite(i + 2, HIGH);
 
@@ -70,9 +74,8 @@ void setup() {
       digitalWrite(i + 2, LOW);
     }
   }
-  //---------------------------
+  //===========================
 
-  //srand((unsigned int)ctime(0));
   create_block();
   Serial.begin(9600);
 }
@@ -98,7 +101,7 @@ int overlap_check(int flag) {
       falling_block[i] = block[shape][rotate + 1][i];
     }
   }
-  //------------------------------------------------------
+  //===========================---------------------------
   for (int i = 0; i < 8; i++) {
     if (edge[i] & falling_block[i]) {
       if (flag == 0) {
@@ -125,7 +128,7 @@ int overlap_check(int flag) {
       return 1;
     }
   }
-  //------------------------------------------------------
+  //===========================---------------------------
   if (flag == 0) {
     memmove(falling_block - 1, falling_block, sizeof(int) * 8);
     falling_block[7] = 0x00;
@@ -182,8 +185,106 @@ void loop() {
   c_micros = micros();
   c_millis = millis();
 
+  //===========================Analog Read
+  ADMUX = 0x44;
+  ADCSRA |= 0x40;
+  while (!(ADCSRA & 0x10));
+  ADCSRA |= 0x10;
+  int x_value = ADC;
 
-  //---------------------------KEY EVENT
+  ADMUX = 0x45;
+  ADCSRA |= 0x40;
+  while (!(ADCSRA & 0x10));
+  ADCSRA |= 0x10;
+  int y_value = ADC;
+  //===========================
+
+  //===========================KEY EVENT (ADC)
+  //---------------------------X
+  if (x_value >= 700 && x_value <= 1023) {
+    if (flag_right) {
+      flag_right = false;
+      flag_left = true;
+
+      if (!overlap_check(2)) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] >>= 1;
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
+    }
+  }
+  else if (x_value <= 400 && x_value >= 0) {
+    if (flag_left) {
+      flag_left = false;
+      flag_right = true;
+
+      if (!overlap_check(1)) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] <<= 1;
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
+    }
+  }
+  else {
+    flag_left = true;
+    flag_right = true;
+  }
+  //---------------------------Y
+  if (y_value <= 400 && y_value >= 0) {
+    if (flag_up) {
+      flag_up = false;
+      flag_down = true;
+
+      if (!overlap_check(3)) {
+        rotate++;
+
+        if (rotate == 4) {
+          rotate = 0;
+        }
+
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] = block[shape][rotate][i];
+        }
+        memmove(falling_block + y, falling_block, sizeof(int) * 8);
+        for (int i = 0; i < y; i++) {
+          falling_block[i] = 0x00;
+        }
+
+        for (int i = 0; i < 8; i++) {
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
+    }
+  }
+  else if (y_value >= 700 && y_value <= 1023) {
+    if (flag_down) {
+      flag_down = false;
+      flag_up = true;
+
+      if (!overlap_check(0)) {
+        y++;
+        memmove(falling_block + 1, falling_block, sizeof(int) * 8);
+        falling_block[0] = 0x00;
+
+        for (int i = 0; i < 8; i++) {
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
+    }
+  }
+  else {
+    flag_down = true;
+    flag_up = true;
+  }
+  //===========================
+
+  //===========================KEY EVENT (Serial)
   if (Serial.available()) {
     char key = Serial.read();
 
@@ -240,22 +341,22 @@ void loop() {
       }
     }
   }
-  //---------------------------
+  //===========================
 
-  //---------------------------1000 mills Delay
+  //===========================1000 mills Delay
   if (c_millis - p_millis > 1000) {
     p_millis = c_millis;
 
     Serial.print("");
     if (!overlap_check(0)) {
-      //---------------------------DOWN SHIFT
+      //===========================DOWN SHIFT
       y++;
       memmove(falling_block + 1, falling_block, sizeof(int) * 8);
       falling_block[0] = 0x00;
-      //---------------------------
+      //===========================
     }
     else {
-      //---------------------------LINE CHECK
+      //===========================LINE CHECK
       for (int j = 0; j < 8; j++) {
         if (show_block[j] == 0x7E) {
           for (int i = j; i >= 0; i--) {
@@ -270,7 +371,7 @@ void loop() {
           edge[0] = 0x81;
         }
       }
-      //---------------------------
+      //===========================
 
       insert_block();
       create_block();
@@ -281,16 +382,16 @@ void loop() {
       show_block[i] |= fallen_block[i];
     }
   }
-  //---------------------------
+  //===========================
 
-  //---------------------------2500 micros Delay
+  //===========================2500 micros Delay
   if (c_micros - p_micros > 2500) {
     p_micros = c_micros;
 
     for (int j = 0; j < 8; j++) {
       digitalWrite(j + 10, HIGH);
 
-      //---------------------------DRAW BLOCK
+      //===========================DRAW BLOCK
       for (int i = 0; i < 8; i++) {
         if (show_block[j] & (0x80 >> i)) {
           digitalWrite(i + 2 , LOW);
@@ -299,9 +400,9 @@ void loop() {
           digitalWrite(i + 2 , HIGH);
         }
       }
-      //---------------------------
+      //===========================
 
-      //---------------------------OFF ALL
+      //===========================OFF ALL
       for (int i = 0; i < 16; i++) {
         digitalWrite(i + 2, HIGH);
 
@@ -309,7 +410,7 @@ void loop() {
           digitalWrite(i + 2, LOW);
         }
       }
-      //---------------------------
+      //===========================
     }
   }
 }
