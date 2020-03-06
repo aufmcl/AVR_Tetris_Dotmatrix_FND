@@ -43,15 +43,17 @@ unsigned long c_micros = 0;
 unsigned long p_micros = 0;
 unsigned long c_millis = 0;
 unsigned long p_millis = 0;
+unsigned short rotate = 0;
+unsigned short y = 0;
+unsigned short shape = 0;
+unsigned short score = 0;
+bool flag_right = false, flag_left = false;
+bool flag_up = false, flag_down = false;
 int falling_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int fallen_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int show_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int edge[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
-int rotate = 0;
-int y = 0;
-int shape = 0;
-bool flag_right = false, flag_left = false;
-bool flag_up = false, flag_down = false;
+
 
 
 void setup() {

@@ -1,5 +1,5 @@
 # Tetris_Dotmatrix_FND
- With joysticks, it controls the blocks seen in the dot matrix, and shows scores on character LCD.
+ With joysticks, it controls the blocks seen in the dot matrix, and shows scores on Windows.
 
 - H/W
   Dot matrix : 10888BS
