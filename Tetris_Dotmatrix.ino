@@ -361,6 +361,7 @@ void loop() {
       //===========================LINE CHECK
       for (int j = 0; j < 8; j++) {
         if (show_block[j] == 0x7E) {
+          Serial.write("1");
           for (int i = j; i >= 0; i--) {
             show_block[i] = show_block[i - 1];
             falling_block[i] = falling_block[i - 1];
