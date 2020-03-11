@@ -74,7 +74,7 @@ namespace Tetris_ScoreBoard
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK);
-            }            
+            }
         }
 
         int score = 0;
@@ -84,7 +84,7 @@ namespace Tetris_ScoreBoard
             {
                 this.Invoke(new MethodInvoker(delegate ()
                 {
-                    
+
                     score += 100;
                     lb_Score.Text = score.ToString();
                 }));

@@ -41,7 +41,7 @@
             // 
             this.lb_Score.AutoSize = true;
             this.lb_Score.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F);
-            this.lb_Score.Location = new System.Drawing.Point(12, 11);
+            this.lb_Score.Location = new System.Drawing.Point(12, 9);
             this.lb_Score.Name = "lb_Score";
             this.lb_Score.Size = new System.Drawing.Size(72, 22);
             this.lb_Score.TabIndex = 0;
