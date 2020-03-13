@@ -64,6 +64,12 @@ void setup() {
   ADMUX = 0x40;
   ADCSRA = 0x87;
 
+  //Serial.begin(9600);
+  UBRR0 = 103;    //9600 baudrate
+  UCSR0A = 0x00;  //U2X = 0
+  UCSR0B = 0x98;  //TX, RX enable
+  UCSR0C = 0x06;  //Async, no Parity, 1 stop, 8bit
+
   for (int i = 0; i < 16; i++) {
     pinMode(i + 2, OUTPUT);
   }
@@ -79,7 +85,7 @@ void setup() {
   //===========================
 
   create_block();
-  Serial.begin(9600);
+
 }
 
 
@@ -361,7 +367,11 @@ void loop() {
       //===========================LINE CHECK
       for (int j = 0; j < 8; j++) {
         if (show_block[j] == 0x7E) {
-          Serial.write("1");
+
+          //---------------------------Serial.write(1)
+          while (!(UCSR0A & 0x20));
+          UDR0 = 0x31;
+          
           for (int i = j; i >= 0; i--) {
             show_block[i] = show_block[i - 1];
             falling_block[i] = falling_block[i - 1];
