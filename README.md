@@ -6,7 +6,9 @@
  1. Install the Fritzing program. (Required to open Circuit_diagram.fzz)
  2. Construct the circuit by referring to the Circuit_diagram.fzz file on the aduino UNO board.
  3. Upload the Tetris_Dotmatrix_LCD.ino file.
- 
+ 4. Run Tetris_ScoreBoard.exe located in the path "Tetris_Dotmatrix\Tetris_ScoreBoard_WPF\bin".
+ 5. Set Baud rate to 9600, select Aduino COM port.
+ 6. Press the reset button on the Aduino board to start the game.
  
 ## How to play
 * Control the falling block through the joystick.
