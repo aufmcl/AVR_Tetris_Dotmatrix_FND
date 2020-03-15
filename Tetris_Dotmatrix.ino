@@ -293,62 +293,9 @@ void loop() {
   //===========================
 
   //===========================KEY EVENT (Serial)
-  if (Serial.available()) {
-    char key = Serial.read();
 
-    if (key == 'a' || key == 'A') {
-      if (!overlap_check(1)) {
-        for (int i = 0; i < 8; i++) {
-          falling_block[i] <<= 1;
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
-        }
-      }
-    }
-    else if (key == 'd' || key == 'D') {
-      if (!overlap_check(2)) {
-        for (int i = 0; i < 8; i++) {
-          falling_block[i] >>= 1;
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
-        }
-      }
-    }
-    else if (key == 's' || key == 'S') {
-      if (!overlap_check(0)) {
-        y++;
-        memmove(falling_block + 1, falling_block, sizeof(int) * 8);
-        falling_block[0] = 0x00;
 
-        for (int i = 0; i < 8; i++) {
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
-        }
-      }
-    }
-    else if (key == 'r' || key == 'R') {
-      if (!overlap_check(3)) {
-        rotate++;
 
-        if (rotate == 4) {
-          rotate = 0;
-        }
-
-        for (int i = 0; i < 8; i++) {
-          falling_block[i] = block[shape][rotate][i];
-        }
-        memmove(falling_block + y, falling_block, sizeof(int) * 8);
-        for (int i = 0; i < y; i++) {
-          falling_block[i] = 0x00;
-        }
-
-        for (int i = 0; i < 8; i++) {
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
-        }
-      }
-    }
-  }
   //===========================
 
   //===========================1000 mills Delay
@@ -371,7 +318,7 @@ void loop() {
           //---------------------------Serial.write(1)
           while (!(UCSR0A & 0x20));
           UDR0 = 0x31;
-          
+
           for (int i = j; i >= 0; i--) {
             show_block[i] = show_block[i - 1];
             falling_block[i] = falling_block[i - 1];
@@ -424,6 +371,69 @@ void loop() {
         }
       }
       //===========================
+    }
+  }
+}
+
+ISR(USART_RX_vect) {
+  char key;
+
+  if (UCSR0A & 0x80) { // Serial.availabe()
+    value = UDR0;
+
+    while (!(UCSR0A & 0x20));
+
+    if (key == 'A') {
+      if (!overlap_check(1)) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] <<= 1;
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
+    }
+    else if (key == 'D') {
+      if (!overlap_check(2)) {
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] >>= 1;
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
+    }
+    else if (key == 'S') {
+      if (!overlap_check(0)) {
+        y++;
+        memmove(falling_block + 1, falling_block, sizeof(int) * 8);
+        falling_block[0] = 0x00;
+
+        for (int i = 0; i < 8; i++) {
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
+    }
+    else if (key == 'R') {
+      if (!overlap_check(3)) {
+        rotate++;
+
+        if (rotate == 4) {
+          rotate = 0;
+        }
+
+        for (int i = 0; i < 8; i++) {
+          falling_block[i] = block[shape][rotate][i];
+        }
+        memmove(falling_block + y, falling_block, sizeof(int) * 8);
+        for (int i = 0; i < y; i++) {
+          falling_block[i] = 0x00;
+        }
+
+        for (int i = 0; i < 8; i++) {
+          show_block[i] = falling_block[i];
+          show_block[i] |= fallen_block[i];
+        }
+      }
     }
   }
 }
