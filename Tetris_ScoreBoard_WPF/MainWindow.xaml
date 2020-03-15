@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris_ScoreBoard"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" KeyDown="Window_KeyDown">
     <Grid>
         <!--<StatusBar Name="statusBar1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,430,0,0" Height="10" Width="800" />-->
         <StatusBar Name="statusBar1" HorizontalAlignment ="Left" VerticalAlignment="Top" Margin="0,378,0,0" Height="40" Width="800" >

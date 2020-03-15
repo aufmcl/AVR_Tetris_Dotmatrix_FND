@@ -28,7 +28,6 @@ namespace Tetris_ScoreBoard
             serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
         }
 
-        Thread Serial_Received_Thread;
         int score = 0;
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -77,11 +76,6 @@ namespace Tetris_ScoreBoard
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             serialPort.Close();
-
-            if (Serial_Received_Thread != null)
-            {
-                Serial_Received_Thread.Abort();
-            }
         }
 
         private void cbbox_Baudrate_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -97,7 +91,20 @@ namespace Tetris_ScoreBoard
 
         private void cbbox_COM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            serialPort.PortName = cbbox_COM.SelectedItem.ToString();
+            try
+            {
+                serialPort.PortName = cbbox_COM.SelectedItem.ToString();
+
+                if (serialPort.IsOpen)
+                {
+                    sbStrip1.Content = serialPort.PortName + " : " + serialPort.BaudRate + ", 8N1";
+                }
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
 
         private void btn_Connect_Click(object sender, RoutedEventArgs e)
@@ -109,6 +116,7 @@ namespace Tetris_ScoreBoard
                 if (serialPort.IsOpen)
                 {
                     MessageBox.Show("Serial connect Successfully!", "Successfully", MessageBoxButton.OK, MessageBoxImage.Information);
+                    sbStrip1.Content = serialPort.PortName + " : " + serialPort.BaudRate + ", 8N1";
                 }
             }
             catch (System.Exception ex)
@@ -130,6 +138,26 @@ namespace Tetris_ScoreBoard
 
 
             MessageBox.Show("Serial disconnect Successfully!", "Successfully", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.A)
+            {
+                serialPort.Write("A");
+            }
+            else if (e.Key == Key.S)
+            {
+                serialPort.Write("S");
+            }
+            else if (e.Key == Key.D)
+            {
+                serialPort.Write("D");
+            }
+            else if (e.Key == Key.R)
+            {
+                serialPort.Write("R");
+            }
         }
     }
 }
