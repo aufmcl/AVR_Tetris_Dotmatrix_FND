@@ -49,10 +49,12 @@ unsigned short shape = 0;
 unsigned short score = 0;
 bool flag_right = false, flag_left = false;
 bool flag_up = false, flag_down = false;
+bool flag_start = false;
 int falling_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int fallen_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int show_block[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int edge[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
+char key;
 
 
 
@@ -190,196 +192,196 @@ void create_block() {
 
 
 void loop() {
-  c_micros = micros();
-  c_millis = millis();
+  if (flag_start) {
+    c_micros = micros();
+    c_millis = millis();
 
-  //===========================Analog Read
-  ADMUX = 0x44;
-  ADCSRA |= 0x40;
-  while (!(ADCSRA & 0x10));
-  ADCSRA |= 0x10;
-  int x_value = ADC;
+    //===========================Analog Read
+    ADMUX = 0x44;
+    ADCSRA |= 0x40;
+    while (!(ADCSRA & 0x10));
+    ADCSRA |= 0x10;
+    int x_value = ADC;
 
-  ADMUX = 0x45;
-  ADCSRA |= 0x40;
-  while (!(ADCSRA & 0x10));
-  ADCSRA |= 0x10;
-  int y_value = ADC;
-  //===========================
+    ADMUX = 0x45;
+    ADCSRA |= 0x40;
+    while (!(ADCSRA & 0x10));
+    ADCSRA |= 0x10;
+    int y_value = ADC;
+    //===========================
 
-  //===========================KEY EVENT (ADC)
-  //---------------------------X
-  if (x_value >= 700 && x_value <= 1023) {
-    if (flag_right) {
-      flag_right = false;
+    //===========================KEY EVENT (ADC)
+    //---------------------------X
+    if (x_value >= 700 && x_value <= 1023) {
+      if (flag_right) {
+        flag_right = false;
+        flag_left = true;
+
+        if (!overlap_check(2)) {
+          for (int i = 0; i < 8; i++) {
+            falling_block[i] >>= 1;
+            show_block[i] = falling_block[i];
+            show_block[i] |= fallen_block[i];
+          }
+        }
+      }
+    }
+    else if (x_value <= 400 && x_value >= 0) {
+      if (flag_left) {
+        flag_left = false;
+        flag_right = true;
+
+        if (!overlap_check(1)) {
+          for (int i = 0; i < 8; i++) {
+            falling_block[i] <<= 1;
+            show_block[i] = falling_block[i];
+            show_block[i] |= fallen_block[i];
+          }
+        }
+      }
+    }
+    else {
       flag_left = true;
-
-      if (!overlap_check(2)) {
-        for (int i = 0; i < 8; i++) {
-          falling_block[i] >>= 1;
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
-        }
-      }
-    }
-  }
-  else if (x_value <= 400 && x_value >= 0) {
-    if (flag_left) {
-      flag_left = false;
       flag_right = true;
+    }
+    //---------------------------Y
+    if (y_value <= 400 && y_value >= 0) {
+      if (flag_up) {
+        flag_up = false;
+        flag_down = true;
 
-      if (!overlap_check(1)) {
-        for (int i = 0; i < 8; i++) {
-          falling_block[i] <<= 1;
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
+        if (!overlap_check(3)) {
+          rotate++;
+
+          if (rotate == 4) {
+            rotate = 0;
+          }
+
+          for (int i = 0; i < 8; i++) {
+            falling_block[i] = block[shape][rotate][i];
+          }
+          memmove(falling_block + y, falling_block, sizeof(int) * 8);
+          for (int i = 0; i < y; i++) {
+            falling_block[i] = 0x00;
+          }
+
+          for (int i = 0; i < 8; i++) {
+            show_block[i] = falling_block[i];
+            show_block[i] |= fallen_block[i];
+          }
         }
       }
     }
-  }
-  else {
-    flag_left = true;
-    flag_right = true;
-  }
-  //---------------------------Y
-  if (y_value <= 400 && y_value >= 0) {
-    if (flag_up) {
-      flag_up = false;
+    else if (y_value >= 700 && y_value <= 1023) {
+      if (flag_down) {
+        flag_down = false;
+        flag_up = true;
+
+        if (!overlap_check(0)) {
+          y++;
+          memmove(falling_block + 1, falling_block, sizeof(int) * 8);
+          falling_block[0] = 0x00;
+
+          for (int i = 0; i < 8; i++) {
+            show_block[i] = falling_block[i];
+            show_block[i] |= fallen_block[i];
+          }
+        }
+      }
+    }
+    else {
       flag_down = true;
-
-      if (!overlap_check(3)) {
-        rotate++;
-
-        if (rotate == 4) {
-          rotate = 0;
-        }
-
-        for (int i = 0; i < 8; i++) {
-          falling_block[i] = block[shape][rotate][i];
-        }
-        memmove(falling_block + y, falling_block, sizeof(int) * 8);
-        for (int i = 0; i < y; i++) {
-          falling_block[i] = 0x00;
-        }
-
-        for (int i = 0; i < 8; i++) {
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
-        }
-      }
-    }
-  }
-  else if (y_value >= 700 && y_value <= 1023) {
-    if (flag_down) {
-      flag_down = false;
       flag_up = true;
+    }
+    //===========================
 
+    //===========================KEY EVENT (Serial)
+
+
+
+    //===========================
+
+    //===========================1000 mills Delay
+    if (c_millis - p_millis > 1000) {
+      p_millis = c_millis;
+
+      //Serial.print("");
       if (!overlap_check(0)) {
+        //===========================DOWN SHIFT
         y++;
         memmove(falling_block + 1, falling_block, sizeof(int) * 8);
         falling_block[0] = 0x00;
-
-        for (int i = 0; i < 8; i++) {
-          show_block[i] = falling_block[i];
-          show_block[i] |= fallen_block[i];
-        }
+        //===========================
       }
-    }
-  }
-  else {
-    flag_down = true;
-    flag_up = true;
-  }
-  //===========================
+      else {
+        //===========================LINE CHECK
+        for (int j = 0; j < 8; j++) {
+          if (show_block[j] == 0x7E) {
 
-  //===========================KEY EVENT (Serial)
+            //---------------------------Serial.write(1)
+            while (!(UCSR0A & 0x20));
+            UDR0 = 0x31;
 
-
-
-  //===========================
-
-  //===========================1000 mills Delay
-  if (c_millis - p_millis > 1000) {
-    p_millis = c_millis;
-
-    Serial.print("");
-    if (!overlap_check(0)) {
-      //===========================DOWN SHIFT
-      y++;
-      memmove(falling_block + 1, falling_block, sizeof(int) * 8);
-      falling_block[0] = 0x00;
-      //===========================
-    }
-    else {
-      //===========================LINE CHECK
-      for (int j = 0; j < 8; j++) {
-        if (show_block[j] == 0x7E) {
-
-          //---------------------------Serial.write(1)
-          while (!(UCSR0A & 0x20));
-          UDR0 = 0x31;
-
-          for (int i = j; i >= 0; i--) {
-            show_block[i] = show_block[i - 1];
-            falling_block[i] = falling_block[i - 1];
-            fallen_block[i] = fallen_block[i - 1];
-            edge[i] = edge[i - 1];
+            for (int i = j; i >= 0; i--) {
+              show_block[i] = show_block[i - 1];
+              falling_block[i] = falling_block[i - 1];
+              fallen_block[i] = fallen_block[i - 1];
+              edge[i] = edge[i - 1];
+            }
+            show_block[0] = 0x00;
+            falling_block[0] = 0x00;
+            fallen_block[0] = 0x00;
+            edge[0] = 0x81;
           }
-          show_block[0] = 0x00;
-          falling_block[0] = 0x00;
-          fallen_block[0] = 0x00;
-          edge[0] = 0x81;
         }
+        //===========================
+
+        insert_block();
+        create_block();
       }
-      //===========================
 
-      insert_block();
-      create_block();
-    }
-
-    for (int i = 0; i < 8; i++) {
-      show_block[i] = falling_block[i];
-      show_block[i] |= fallen_block[i];
-    }
-  }
-  //===========================
-
-  //===========================2500 micros Delay
-  if (c_micros - p_micros > 2500) {
-    p_micros = c_micros;
-
-    for (int j = 0; j < 8; j++) {
-      digitalWrite(j + 10, HIGH);
-
-      //===========================DRAW BLOCK
       for (int i = 0; i < 8; i++) {
-        if (show_block[j] & (0x80 >> i)) {
-          digitalWrite(i + 2 , LOW);
-        }
-        else {
-          digitalWrite(i + 2 , HIGH);
-        }
+        show_block[i] = falling_block[i];
+        show_block[i] |= fallen_block[i];
       }
-      //===========================
+    }
+    //===========================
 
-      //===========================OFF ALL
-      for (int i = 0; i < 16; i++) {
-        digitalWrite(i + 2, HIGH);
+    //===========================2500 micros Delay
+    if (c_micros - p_micros > 2500) {
+      p_micros = c_micros;
 
-        if (i >= 8) {
-          digitalWrite(i + 2, LOW);
+      for (int j = 0; j < 8; j++) {
+        digitalWrite(j + 10, HIGH);
+
+        //===========================DRAW BLOCK
+        for (int i = 0; i < 8; i++) {
+          if (show_block[j] & (0x80 >> i)) {
+            digitalWrite(i + 2 , LOW);
+          }
+          else {
+            digitalWrite(i + 2 , HIGH);
+          }
         }
+        //===========================
+
+        //===========================OFF ALL
+        for (int i = 0; i < 16; i++) {
+          digitalWrite(i + 2, HIGH);
+
+          if (i >= 8) {
+            digitalWrite(i + 2, LOW);
+          }
+        }
+        //===========================
       }
-      //===========================
     }
   }
 }
 
 ISR(USART_RX_vect) {
-  char key;
-
   if (UCSR0A & 0x80) { // Serial.availabe()
-    value = UDR0;
+    key = UDR0;
 
     while (!(UCSR0A & 0x20));
 
@@ -434,6 +436,12 @@ ISR(USART_RX_vect) {
           show_block[i] |= fallen_block[i];
         }
       }
+    }
+    else if (key == '1') {
+      flag_start = true;
+    }
+    else if (key == '0') {
+      flag_start = false;
     }
   }
 }

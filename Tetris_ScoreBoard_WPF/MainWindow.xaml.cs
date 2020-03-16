@@ -78,6 +78,26 @@ namespace Tetris_ScoreBoard
             serialPort.Close();
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.A)
+            {
+                serialPort.Write("A");
+            }
+            else if (e.Key == Key.S)
+            {
+                serialPort.Write("S");
+            }
+            else if (e.Key == Key.D)
+            {
+                serialPort.Write("D");
+            }
+            else if (e.Key == Key.R)
+            {
+                serialPort.Write("R");
+            }
+        }
+
         private void cbbox_Baudrate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string[] names = cbbox_Baudrate.SelectedItem.ToString().Split(':');
@@ -138,26 +158,16 @@ namespace Tetris_ScoreBoard
 
 
             MessageBox.Show("Serial disconnect Successfully!", "Successfully", MessageBoxButton.OK, MessageBoxImage.Information);
+        }        
+
+        private void btn_Start_Click(object sender, RoutedEventArgs e)
+        {
+            serialPort.Write("1");
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void btn_Stop_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.A)
-            {
-                serialPort.Write("A");
-            }
-            else if (e.Key == Key.S)
-            {
-                serialPort.Write("S");
-            }
-            else if (e.Key == Key.D)
-            {
-                serialPort.Write("D");
-            }
-            else if (e.Key == Key.R)
-            {
-                serialPort.Write("R");
-            }
+            serialPort.Write("0");
         }
-    }
+    }   
 }

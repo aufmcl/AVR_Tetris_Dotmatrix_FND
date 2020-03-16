@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" KeyDown="Window_KeyDown">
     <Grid>
-        <!--<StatusBar Name="statusBar1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,430,0,0" Height="10" Width="800" />-->
         <StatusBar Name="statusBar1" HorizontalAlignment ="Left" VerticalAlignment="Top" Margin="0,378,0,0" Height="40" Width="800" >
             <StatusBarItem Name="sbStrip1" />
         </StatusBar>
@@ -19,10 +18,12 @@
             <ComboBoxItem Content="57600" />
             <ComboBoxItem Content="115200" />
         </ComboBox>
-        <ComboBox Name="cbbox_COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="507,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_COM_SelectionChanged" />
-        <Button Name="btn_Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="612,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" />
-        <Button Name="btn_Disconnect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="697,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" />
-        <Label Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="150" Height="30" Content="Score : " FontSize="13" />
+        <ComboBox x:Name="cbbox_COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="507,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_COM_SelectionChanged" />
+        <Button x:Name="btn_Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="612,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" />
+        <Button x:Name="btn_Disconnect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="697,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" />
+        <Button x:Name="btn_Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,10,0,0" Width="100"  Height="30" Content="Start" Click="btn_Start_Click"/>
+        <Button x:Name="btn_Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,45,0,0" Width="100"  Height="30" Content="Stop" Click="btn_Stop_Click"/>
+        <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="150" Height="30" Content="Score : " FontSize="13" />
         
     </Grid>
 </Window>
