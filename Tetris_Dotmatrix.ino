@@ -57,7 +57,6 @@ int edge[8] = {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
 char key;
 
 
-
 void setup() {
   //  TCCR1A = 0x00;
   //  TCCR1B = 0x04;
@@ -84,10 +83,7 @@ void setup() {
       digitalWrite(i + 2, LOW);
     }
   }
-  //===========================
-
-  create_block();
-
+  //===========================  
 }
 
 
@@ -192,7 +188,9 @@ void create_block() {
 
 
 void loop() {
-  if (flag_start) {
+  create_block();
+  
+  while (flag_start == true) {
     c_micros = micros();
     c_millis = millis();
 
@@ -295,12 +293,6 @@ void loop() {
     }
     //===========================
 
-    //===========================KEY EVENT (Serial)
-
-
-
-    //===========================
-
     //===========================1000 mills Delay
     if (c_millis - p_millis > 1000) {
       p_millis = c_millis;
@@ -315,7 +307,16 @@ void loop() {
       }
       else {
         //===========================LINE CHECK
+
+        //---------------------------GAME OVER
         for (int j = 0; j < 8; j++) {
+          if (show_block[0] & 0x7E) {
+            flag_start = false;
+
+            while (!(UCSR0A & 0x20));
+            UDR0 = 0x71;
+          }
+
           if (show_block[j] == 0x7E) {
 
             //---------------------------Serial.write(1)
@@ -377,6 +378,14 @@ void loop() {
       }
     }
   }
+
+  for (int i = 0; i < 8; i++) {
+    falling_block[i] = 0x00;
+    fallen_block[i] = 0x00;
+    show_block[i] = 0x00;
+    edge[i] = 0x81;
+  }
+  edge[7] = 0xFF;
 }
 
 ISR(USART_RX_vect) {

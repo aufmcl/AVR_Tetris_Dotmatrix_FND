@@ -19,10 +19,11 @@
             <ComboBoxItem Content="115200" />
         </ComboBox>
         <ComboBox x:Name="cbbox_COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="507,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_COM_SelectionChanged" />
+        <Button x:Name="btn_Search" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="317,384,0,0" Width="80" Height="20" Content="Search" Click="btn_Search_Click" />
         <Button x:Name="btn_Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="612,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" />
         <Button x:Name="btn_Disconnect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="697,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" />
         <Button x:Name="btn_Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,10,0,0" Width="100"  Height="30" Content="Start" Click="btn_Start_Click"/>
-        <Button x:Name="btn_Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,45,0,0" Width="100"  Height="30" Content="Stop" Click="btn_Stop_Click"/>
+        <Button x:Name="btn_Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,80,0,0" Width="100"  Height="30" Content="Pause" Click="btn_Pause_Click"/>
         <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="150" Height="30" Content="Score : " FontSize="13" />
         
     </Grid>

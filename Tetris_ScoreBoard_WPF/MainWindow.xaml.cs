@@ -35,24 +35,17 @@ namespace Tetris_ScoreBoard
             {
                 this.Dispatcher.Invoke(new Action(delegate
                 {
-
                     score += 100;
                     lb_Score.Content = score.ToString();
                 }));
             }
             else
-            {
+            {   
                 score += 100;
                 lb_Score.Content = score.ToString();
             }
         }
 
-        private void Serial_Received()
-        {
-            int score = 0;
-            score += 100;
-            lb_Score.Content = score.ToString();
-        }
 
         SerialPort serialPort = new SerialPort();
 
@@ -80,22 +73,30 @@ namespace Tetris_ScoreBoard
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.A)
+            try
             {
-                serialPort.Write("A");
+                if (e.Key == Key.A)
+                {
+                    serialPort.Write("A");
+                }
+                else if (e.Key == Key.S)
+                {
+                    serialPort.Write("S");
+                }
+                else if (e.Key == Key.D)
+                {
+                    serialPort.Write("D");
+                }
+                else if (e.Key == Key.R)
+                {
+                    serialPort.Write("R");
+                }
             }
-            else if (e.Key == Key.S)
+            catch (System.Exception ex)
             {
-                serialPort.Write("S");
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else if (e.Key == Key.D)
-            {
-                serialPort.Write("D");
-            }
-            else if (e.Key == Key.R)
-            {
-                serialPort.Write("R");
-            }
+
         }
 
         private void cbbox_Baudrate_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -156,18 +157,41 @@ namespace Tetris_ScoreBoard
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-
             MessageBox.Show("Serial disconnect Successfully!", "Successfully", MessageBoxButton.OK, MessageBoxImage.Information);
-        }        
+        }
 
         private void btn_Start_Click(object sender, RoutedEventArgs e)
         {
-            serialPort.Write("1");
+            try
+            {
+                serialPort.Write("1");
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void btn_Stop_Click(object sender, RoutedEventArgs e)
+        private void btn_Pause_Click(object sender, RoutedEventArgs e)
         {
-            serialPort.Write("0");
+            try
+            {
+                serialPort.Write("0");
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-    }   
+
+        private void btn_Search_Click(object sender, RoutedEventArgs e)
+        {
+            string[] ports = SerialPort.GetPortNames();
+
+            foreach (string port in ports)
+            {
+                cbbox_COM.Items.Add(port);
+            }
+        }
+    }
 }
