@@ -4,6 +4,52 @@
              xmlns:local="clr-namespace:Tetris_ScoreBoard"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        
+        <ControlTemplate TargetType="Button" x:Key="grenn_square">
+            <Border Background="#FF99DD99" BorderBrush="{TemplateBinding Property=BorderBrush}" BorderThickness="{TemplateBinding Property=BorderThickness}" CornerRadius="7" >
+
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            </Border>
+
+        </ControlTemplate>
+
+        <ControlTemplate TargetType="Button" x:Key="red_square">
+            <Border Background="#FFFF3B3B" BorderBrush="{TemplateBinding Property=BorderBrush}" BorderThickness="{TemplateBinding Property=BorderThickness}" CornerRadius="7">
+
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            </Border>
+
+        </ControlTemplate>
+
+        <ControlTemplate TargetType="Button" x:Key="orange_square">
+            <Border Background="#FFFF981C"  BorderBrush="{TemplateBinding Property=BorderBrush}" BorderThickness="{TemplateBinding Property=BorderThickness}" CornerRadius="7" >
+
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            </Border>
+
+        </ControlTemplate>
+
+
+        <Style TargetType="Button" x:Key="GreenButton" >
+
+            <Setter Property="Template" Value="{StaticResource grenn_square}"/>
+
+        </Style>
+
+        <Style TargetType="Button" x:Key="RedButton" >
+
+            <Setter Property="Template" Value="{StaticResource red_square}"/>
+
+        </Style>
+
+        <Style TargetType="Button" x:Key="OrangeButton" >
+
+            <Setter Property="Template" Value="{StaticResource orange_square}"/>
+
+        </Style>
+
     </Application.Resources>
 </Application>

@@ -31,18 +31,34 @@ namespace Tetris_ScoreBoard
         int score = 0;
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            int value = serialPort.ReadChar();
+
+            
+            //else if (value == 71)
+
             if (!Dispatcher.CheckAccess())
             {
                 this.Dispatcher.Invoke(new Action(delegate
                 {
-                    score += 100;
-                    lb_Score.Content = score.ToString();
+                    if (value == 49)
+                    {
+                        score += 100;
+                        lb_Score.Content = score.ToString();
+                    }
+                    else if (value == 71)
+                    {
+                        MessageBox.Show("Your score is " + score.ToString(), "Game over", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        score = 0;
+                    }
                 }));
             }
             else
-            {   
-                score += 100;
-                lb_Score.Content = score.ToString();
+            {
+                if (value == 49)
+                {
+                    score += 100;
+                    lb_Score.Content = score.ToString();
+                }
             }
         }
 
@@ -138,6 +154,9 @@ namespace Tetris_ScoreBoard
                 {
                     MessageBox.Show("Serial connect Successfully!", "Successfully", MessageBoxButton.OK, MessageBoxImage.Information);
                     sbStrip1.Content = serialPort.PortName + " : " + serialPort.BaudRate + ", 8N1";
+
+                    btn_Pause.IsEnabled = true;
+                    btn_Start.IsEnabled = true;
                 }
             }
             catch (System.Exception ex)
@@ -192,6 +211,60 @@ namespace Tetris_ScoreBoard
             {
                 cbbox_COM.Items.Add(port);
             }
+        }
+
+        private void btn_Disconnect_MouseEnter(object sender, MouseEventArgs e)
+        {
+            btn_Disconnect.BorderThickness = new Thickness(1, 1, 1, 1);
+            btn_Disconnect.BorderBrush = Brushes.CornflowerBlue;
+        }
+
+        private void btn_Connect_MouseEnter(object sender, MouseEventArgs e)
+        {
+            btn_Connect.BorderThickness = new Thickness(1, 1, 1, 1);
+            btn_Connect.BorderBrush = Brushes.CornflowerBlue;
+        }
+
+        private void btn_Search_MouseEnter(object sender, MouseEventArgs e)
+        {
+            btn_Search.BorderThickness = new Thickness(1, 1, 1, 1);
+            btn_Search.BorderBrush = Brushes.CornflowerBlue;
+        }
+
+        private void btn_Pause_MouseEnter(object sender, MouseEventArgs e)
+        {
+            btn_Pause.BorderThickness = new Thickness(1, 1, 1, 1);
+            btn_Pause.BorderBrush = Brushes.CornflowerBlue;
+        }
+
+        private void btn_Start_MouseEnter(object sender, MouseEventArgs e)
+        {
+            btn_Start.BorderThickness = new Thickness(1, 1, 1, 1);
+            btn_Start.BorderBrush = Brushes.CornflowerBlue;
+        }
+
+        private void btn_Disconnect_MouseLeave(object sender, MouseEventArgs e)
+        {
+            btn_Disconnect.BorderThickness = new Thickness(0, 0, 0, 0);
+        }
+
+        private void btn_Connect_MouseLeave(object sender, MouseEventArgs e)
+        {
+            btn_Connect.BorderThickness = new Thickness(0, 0, 0, 0);
+        }
+
+        private void btn_Search_MouseLeave(object sender, MouseEventArgs e)
+        {
+            btn_Search.BorderThickness = new Thickness(0, 0, 0, 0);        }
+
+        private void btn_Pause_MouseLeave(object sender, MouseEventArgs e)
+        {
+            btn_Pause.BorderThickness = new Thickness(0, 0, 0, 0);
+        }
+
+        private void btn_Start_MouseLeave(object sender, MouseEventArgs e)
+        {
+            btn_Start.BorderThickness = new Thickness(0, 0, 0, 0);
         }
     }
 }

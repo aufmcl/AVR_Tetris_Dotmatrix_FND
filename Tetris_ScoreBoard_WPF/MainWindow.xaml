@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris_ScoreBoard"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" KeyDown="Window_KeyDown">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" KeyDown="Window_KeyDown" Background="#FF202020">
     <Grid>
         <StatusBar Name="statusBar1" HorizontalAlignment ="Left" VerticalAlignment="Top" Margin="0,378,0,0" Height="40" Width="800" >
-            <StatusBarItem Name="sbStrip1" />
+            <StatusBarItem Name="sbStrip1" Background="#FF444444" />
         </StatusBar>
         <ComboBox Name="cbbox_Baudrate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="402,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_Baudrate_SelectionChanged">
             <ComboBoxItem Content="4800" />
@@ -19,12 +19,13 @@
             <ComboBoxItem Content="115200" />
         </ComboBox>
         <ComboBox x:Name="cbbox_COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="507,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_COM_SelectionChanged" />
-        <Button x:Name="btn_Search" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="317,384,0,0" Width="80" Height="20" Content="Search" Click="btn_Search_Click" />
-        <Button x:Name="btn_Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="612,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" />
-        <Button x:Name="btn_Disconnect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="697,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" />
-        <Button x:Name="btn_Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,10,0,0" Width="100"  Height="30" Content="Start" Click="btn_Start_Click"/>
-        <Button x:Name="btn_Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,80,0,0" Width="100"  Height="30" Content="Pause" Click="btn_Pause_Click"/>
-        <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="150" Height="30" Content="Score : " FontSize="13" />
-        
+        <Button x:Name="btn_Search"  Style="{StaticResource OrangeButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="317,384,0,0" Width="80" Height="20" Content="Search" Click="btn_Search_Click" MouseEnter="btn_Search_MouseEnter" MouseLeave="btn_Search_MouseLeave" />
+        <Button x:Name="btn_Connect" Style="{StaticResource GreenButton}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="612,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" MouseEnter="btn_Connect_MouseEnter" MouseLeave="btn_Connect_MouseLeave"/>
+        <Button x:Name="btn_Disconnect" Style="{StaticResource RedButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="697,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" MouseEnter="btn_Disconnect_MouseEnter" MouseLeave="btn_Disconnect_MouseLeave"/>
+        <Button x:Name="btn_Start" Style="{StaticResource GreenButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,10,0,0" Width="100"  Height="30" Content="Start" Click="btn_Start_Click" IsEnabled="False"  MouseEnter="btn_Start_MouseEnter" MouseLeave="btn_Start_MouseLeave"/>
+        <Button x:Name="btn_Pause" Style="{StaticResource RedButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,80,0,0" Width="100"  Height="30" Content="Pause" Click="btn_Pause_Click" IsEnabled="False" MouseEnter="btn_Pause_MouseEnter" MouseLeave="btn_Pause_MouseLeave"/>
+        <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,0,0,0" Width="150" Height="50" Content="0" FontSize="24" Foreground="White" />
+        <Label x:Name="lb_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="90" Height="50" Content="Score :" FontSize="24" Foreground="White" />
+
     </Grid>
 </Window>

@@ -83,7 +83,7 @@ void setup() {
       digitalWrite(i + 2, LOW);
     }
   }
-  //===========================  
+  //===========================
 }
 
 
@@ -189,7 +189,7 @@ void create_block() {
 
 void loop() {
   create_block();
-  
+
   while (flag_start == true) {
     c_micros = micros();
     c_millis = millis();
@@ -310,17 +310,7 @@ void loop() {
 
         //---------------------------GAME OVER
         for (int j = 0; j < 8; j++) {
-          if (show_block[0] & 0x7E) {
-            flag_start = false;
-
-            while (!(UCSR0A & 0x20));
-            UDR0 = 0x71;
-          }
-
           if (show_block[j] == 0x7E) {
-
-            //---------------------------Serial.write(1)
-            while (!(UCSR0A & 0x20));
             UDR0 = 0x31;
 
             for (int i = j; i >= 0; i--) {
@@ -336,6 +326,12 @@ void loop() {
           }
         }
         //===========================
+
+        if (show_block[0] & 0x7E) {
+          flag_start = false;
+
+          UDR0 = 0x47;
+        }
 
         insert_block();
         create_block();
