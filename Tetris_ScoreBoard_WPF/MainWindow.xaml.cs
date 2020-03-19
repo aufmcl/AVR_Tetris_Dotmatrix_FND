@@ -25,6 +25,7 @@ namespace Tetris_ScoreBoard
         public MainWindow()
         {
             InitializeComponent();
+            
             serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
         }
 
@@ -230,18 +231,7 @@ namespace Tetris_ScoreBoard
             btn_Search.BorderThickness = new Thickness(1, 1, 1, 1);
             btn_Search.BorderBrush = Brushes.CornflowerBlue;
         }
-
-        private void btn_Pause_MouseEnter(object sender, MouseEventArgs e)
-        {
-            btn_Pause.BorderThickness = new Thickness(1, 1, 1, 1);
-            btn_Pause.BorderBrush = Brushes.CornflowerBlue;
-        }
-
-        private void btn_Start_MouseEnter(object sender, MouseEventArgs e)
-        {
-            btn_Start.BorderThickness = new Thickness(1, 1, 1, 1);
-            btn_Start.BorderBrush = Brushes.CornflowerBlue;
-        }
+        
 
         private void btn_Disconnect_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -255,16 +245,7 @@ namespace Tetris_ScoreBoard
 
         private void btn_Search_MouseLeave(object sender, MouseEventArgs e)
         {
-            btn_Search.BorderThickness = new Thickness(0, 0, 0, 0);        }
-
-        private void btn_Pause_MouseLeave(object sender, MouseEventArgs e)
-        {
-            btn_Pause.BorderThickness = new Thickness(0, 0, 0, 0);
-        }
-
-        private void btn_Start_MouseLeave(object sender, MouseEventArgs e)
-        {
-            btn_Start.BorderThickness = new Thickness(0, 0, 0, 0);
+            btn_Search.BorderThickness = new Thickness(0, 0, 0, 0);
         }
     }
 }

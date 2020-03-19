@@ -6,10 +6,117 @@
         xmlns:local="clr-namespace:Tetris_ScoreBoard"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" KeyDown="Window_KeyDown" Background="#FF202020">
+
+    <Window.Resources>
+        <ImageBrush x:Key="play_on" ImageSource="Assets/play_on.png" Stretch="Fill"/>
+        <ImageBrush x:Key="pause_on" ImageSource="Assets/pause_on.png" Stretch="Fill"/>
+        <ImageBrush x:Key="play_clicked" ImageSource="Assets/play_clicked.png" Stretch="Fill"/>
+        <ImageBrush x:Key="pause_clicked" ImageSource="Assets/pause_clicked.png" Stretch="Fill"/>
+
+
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        
+        <Style x:Key="playStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource play_on}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource play_clicked}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="pauseStyle\" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource pause_on}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource pause_clicked}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
-        <StatusBar Name="statusBar1" HorizontalAlignment ="Left" VerticalAlignment="Top" Margin="0,378,0,0" Height="40" Width="800" >
+        <StatusBar Name="statusBar1" HorizontalAlignment ="Left" VerticalAlignment="Top" Margin="0,378,0,0" Height="40" Width="800" Foreground="White"  >
             <StatusBarItem Name="sbStrip1" Background="#FF444444" />
         </StatusBar>
+
         <ComboBox Name="cbbox_Baudrate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="402,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_Baudrate_SelectionChanged">
             <ComboBoxItem Content="4800" />
             <ComboBoxItem Content="9600" />
@@ -19,13 +126,27 @@
             <ComboBoxItem Content="115200" />
         </ComboBox>
         <ComboBox x:Name="cbbox_COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="507,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_COM_SelectionChanged" />
+
         <Button x:Name="btn_Search"  Style="{StaticResource OrangeButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="317,384,0,0" Width="80" Height="20" Content="Search" Click="btn_Search_Click" MouseEnter="btn_Search_MouseEnter" MouseLeave="btn_Search_MouseLeave" />
         <Button x:Name="btn_Connect" Style="{StaticResource GreenButton}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="612,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" MouseEnter="btn_Connect_MouseEnter" MouseLeave="btn_Connect_MouseLeave"/>
         <Button x:Name="btn_Disconnect" Style="{StaticResource RedButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="697,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" MouseEnter="btn_Disconnect_MouseEnter" MouseLeave="btn_Disconnect_MouseLeave"/>
-        <Button x:Name="btn_Start" Style="{StaticResource GreenButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,10,0,0" Width="100"  Height="30" Content="Start" Click="btn_Start_Click" IsEnabled="False"  MouseEnter="btn_Start_MouseEnter" MouseLeave="btn_Start_MouseLeave"/>
-        <Button x:Name="btn_Pause" Style="{StaticResource RedButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="677,80,0,0" Width="100"  Height="30" Content="Pause" Click="btn_Pause_Click" IsEnabled="False" MouseEnter="btn_Pause_MouseEnter" MouseLeave="btn_Pause_MouseLeave"/>
-        <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,0,0,0" Width="150" Height="50" Content="0" FontSize="24" Foreground="White" />
-        <Label x:Name="lb_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="90" Height="50" Content="Score :" FontSize="24" Foreground="White" />
+
+        <Button x:Name="btn_Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="579,10,0,0" Width="100"  Height="100" BorderThickness ="0" IsEnabled="True" Click="btn_Start_Click" Style="{DynamicResource playStyle}">
+            <Button.Background>
+                <ImageBrush ImageSource="play.png"/>
+            </Button.Background>
+        </Button>
+
+
+
+        <Button x:Name="btn_Pause"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="684,10,0,0" Width="100" Height="100" BorderThickness ="0" IsEnabled="True" Click="btn_Pause_Click" Style="{DynamicResource pauseStyle\\}">
+            <Button.Background>
+                <ImageBrush ImageSource="Assets/pause.png" Stretch="Fill"/>
+            </Button.Background>
+        </Button>
+
+        <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,35,0,0" Width="150" Height="50" Content="0" FontSize="24" Foreground="White" />
+        <Label x:Name="lb_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,35,0,0" Width="90" Height="50" Content="Score :" FontSize="24" Foreground="White" />
 
     </Grid>
 </Window>
