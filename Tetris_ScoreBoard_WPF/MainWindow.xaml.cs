@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Threading;
+using System.ComponentModel;
 
 namespace Tetris_ScoreBoard
 {
@@ -25,16 +26,34 @@ namespace Tetris_ScoreBoard
         public MainWindow()
         {
             InitializeComponent();
-            
+
             serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
         }
 
-        int score = 0;
+        class ListData
+        {
+            public string user { get; set; }
+            public int score { get; set; }
+            public DateTime time { get; set; }
+
+            private static List<ListData> instance;
+
+            public static List<ListData> GetInstance()
+            {
+                if (instance == null)
+                    instance = new List<ListData>();
+
+                return instance;
+            }
+        }
+
+
+        int score_value = 0;
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             int value = serialPort.ReadChar();
 
-            
+
             //else if (value == 71)
 
             if (!Dispatcher.CheckAccess())
@@ -43,13 +62,15 @@ namespace Tetris_ScoreBoard
                 {
                     if (value == 49)
                     {
-                        score += 100;
-                        lb_Score.Content = score.ToString();
+                        score_value += 100;
+                        lb_Score.Content = score_value.ToString();
+
                     }
                     else if (value == 71)
                     {
-                        MessageBox.Show("Your score is " + score.ToString(), "Game over", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        score = 0;
+                        MessageBox.Show("Your score is " + score_value.ToString(), "Game over", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        Add_Item_Listview();
+                        score_value = 0;
                     }
                 }));
             }
@@ -57,12 +78,90 @@ namespace Tetris_ScoreBoard
             {
                 if (value == 49)
                 {
-                    score += 100;
-                    lb_Score.Content = score.ToString();
+                    score_value += 100;
+                    lb_Score.Content = score_value.ToString();
+                }
+                else if (value == 71)
+                {
+                    MessageBox.Show("Your score is " + score_value.ToString(), "Game over", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    Add_Item_Listview();
+                    score_value = 0;
                 }
             }
         }
 
+        void Add_Item_Listview()
+        {
+            ListData.GetInstance().Add(new ListData() { user = txtbox_Name.Text, score = score_value, time = DateTime.Today });
+            lstView.ItemsSource = ListData.GetInstance();
+            lstView.Items.Refresh();
+        }
+
+        GridViewColumnHeader _lastHeaderClicked = null;
+        ListSortDirection _lastDirection = ListSortDirection.Ascending;
+
+        private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
+        {
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            ListSortDirection direction;
+
+            if (headerClicked != null)
+            {
+                if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
+                {
+                    if (headerClicked != _lastHeaderClicked)
+                    {
+                        direction = ListSortDirection.Ascending;
+                    }
+                    else
+                    {
+                        if (_lastDirection == ListSortDirection.Ascending)
+                        {
+                            direction = ListSortDirection.Descending;
+                        }
+                        else
+                        {
+                            direction = ListSortDirection.Ascending;
+                        }
+                    }
+
+                    var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
+                    var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
+
+                    Sort(sortBy, direction);
+
+                    if (direction == ListSortDirection.Ascending)
+                    {
+                        headerClicked.Column.HeaderTemplate =
+                          Resources["HeaderTemplateArrowUp"] as DataTemplate;
+                    }
+                    else
+                    {
+                        headerClicked.Column.HeaderTemplate =
+                          Resources["HeaderTemplateArrowDown"] as DataTemplate;
+                    }
+
+                    // Remove arrow from previously sorted header
+                    if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
+                    {
+                        _lastHeaderClicked.Column.HeaderTemplate = null;
+                    }
+
+                    _lastHeaderClicked = headerClicked;
+                    _lastDirection = direction;
+                }
+            }
+        }
+
+        private void Sort(string sortBy, ListSortDirection direction)
+        {
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(lstView.ItemsSource);
+
+            dataView.SortDescriptions.Clear();
+            SortDescription sd = new SortDescription(sortBy, direction);
+            dataView.SortDescriptions.Add(sd);
+            dataView.Refresh();
+        }
 
         SerialPort serialPort = new SerialPort();
 
@@ -184,7 +283,15 @@ namespace Tetris_ScoreBoard
         {
             try
             {
-                serialPort.Write("1");
+                if (txtbox_Name.Text == "User name" || txtbox_Name.Text == "")
+                {
+                    MessageBox.Show("Input your name!", "Warning!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    serialPort.Write("1");
+                }
+
             }
             catch (System.Exception ex)
             {
@@ -231,7 +338,7 @@ namespace Tetris_ScoreBoard
             btn_Search.BorderThickness = new Thickness(1, 1, 1, 1);
             btn_Search.BorderBrush = Brushes.CornflowerBlue;
         }
-        
+
 
         private void btn_Disconnect_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -246,6 +353,11 @@ namespace Tetris_ScoreBoard
         private void btn_Search_MouseLeave(object sender, MouseEventArgs e)
         {
             btn_Search.BorderThickness = new Thickness(0, 0, 0, 0);
+        }
+
+        private void txtbox_Name_GotMouseCapture(object sender, MouseEventArgs e)
+        {
+            txtbox_Name.Text = "";
         }
     }
 }

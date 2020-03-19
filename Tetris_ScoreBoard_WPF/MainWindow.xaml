@@ -23,7 +23,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
         <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
@@ -33,7 +33,7 @@
         <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
         <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
         <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
-        
+
         <Style x:Key="playStyle" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
@@ -43,7 +43,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="1"/>
-            
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -72,7 +72,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <Style x:Key="pauseStyle\" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
@@ -113,11 +113,11 @@
     </Window.Resources>
 
     <Grid>
-        <StatusBar Name="statusBar1" HorizontalAlignment ="Left" VerticalAlignment="Top" Margin="0,378,0,0" Height="40" Width="800" Foreground="White"  >
+        <StatusBar Name="statusBar1" HorizontalAlignment ="Left" VerticalAlignment="Top" Margin="0,378,-6,0" Height="40" Width="800" Foreground="White" Grid.ColumnSpan="2"  >
             <StatusBarItem Name="sbStrip1" Background="#FF444444" />
         </StatusBar>
 
-        <ComboBox Name="cbbox_Baudrate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="402,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_Baudrate_SelectionChanged">
+        <ComboBox Name="cbbox_Baudrate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="402,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_Baudrate_SelectionChanged" Grid.ColumnSpan="2">
             <ComboBoxItem Content="4800" />
             <ComboBoxItem Content="9600" />
             <ComboBoxItem Content="19200" />
@@ -128,8 +128,8 @@
         <ComboBox x:Name="cbbox_COM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="507,384,0,0" Width="100" Height="20" SelectionChanged="cbbox_COM_SelectionChanged" />
 
         <Button x:Name="btn_Search"  Style="{StaticResource OrangeButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="317,384,0,0" Width="80" Height="20" Content="Search" Click="btn_Search_Click" MouseEnter="btn_Search_MouseEnter" MouseLeave="btn_Search_MouseLeave" />
-        <Button x:Name="btn_Connect" Style="{StaticResource GreenButton}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="612,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" MouseEnter="btn_Connect_MouseEnter" MouseLeave="btn_Connect_MouseLeave"/>
-        <Button x:Name="btn_Disconnect" Style="{StaticResource RedButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="697,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" MouseEnter="btn_Disconnect_MouseEnter" MouseLeave="btn_Disconnect_MouseLeave"/>
+        <Button x:Name="btn_Connect" Style="{StaticResource GreenButton}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="619,384,0,0" Width="80" Height="20" Content="Connect" Click="btn_Connect_Click" MouseEnter="btn_Connect_MouseEnter" MouseLeave="btn_Connect_MouseLeave"/>
+        <Button x:Name="btn_Disconnect" Style="{StaticResource RedButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="704,384,0,0" Width="80" Height="20" Content="Disconnect" Click="btn_Disconnect_Click" MouseEnter="btn_Disconnect_MouseEnter" MouseLeave="btn_Disconnect_MouseLeave"/>
 
         <Button x:Name="btn_Start" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="579,10,0,0" Width="100"  Height="100" BorderThickness ="0" IsEnabled="True" Click="btn_Start_Click" Style="{DynamicResource playStyle}">
             <Button.Background>
@@ -145,8 +145,31 @@
             </Button.Background>
         </Button>
 
-        <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,35,0,0" Width="150" Height="50" Content="0" FontSize="24" Foreground="White" />
-        <Label x:Name="lb_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,35,0,0" Width="90" Height="50" Content="Score :" FontSize="24" Foreground="White" />
+        <Label x:Name="lb_Score" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,35,0,0" Width="100" Height="50" Content="0" FontSize="24" Foreground="White" FontWeight="Bold" />
+        <Label x:Name="lb_SText" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,35,0,0" Width="90" Height="50" Content="Score :" FontSize="24" Foreground="White" FontWeight="Bold" />
+
+        <ListView x:Name="lstView" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,123,0,0" Height="255" Width="500" BorderThickness="0" Background="#FF0F4C82" FontSize="14" Foreground="White" OpacityMask="White" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding user}"/>
+                    <GridViewColumn Header="Score" Width="200" DisplayMemberBinding="{Binding score}"/>
+                    <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding time}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TextBox x:Name="txtbox_Name" VerticalAlignment="Top" Height="30" Margin="272,82,322,0" TextWrapping="Wrap" Text="User name" Background="#00000000" BorderBrush="{x:Null}" Foreground="White" FontSize="22" Grid.ColumnSpan="2" GotMouseCapture="txtbox_Name_GotMouseCapture" />
+        <Rectangle Fill="White" HorizontalAlignment="Left" Height="1" Margin="250,115,0,0" VerticalAlignment="Top" Width="250" Grid.ColumnSpan="2"/>
+        <Image HorizontalAlignment="Left" Height="24" Margin="250,86,0,0" VerticalAlignment="Top" Width="20" Source="person.png" Stretch="Fill">
+            <Image.OpacityMask>
+                <ImageBrush ImageSource="person.png"/>
+            </Image.OpacityMask>
+        </Image>
+
+        <Label Name="lb_MText" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,162,0,0" Width="100" Height="50" Content="Rank.1" Foreground="White" FontSize="29" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"/>
+        <Label Name="lb_User" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,212,0,0" Width="100" Height="40" Content="aufmcl" Foreground="White" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Name="lb_BestScore" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,246,0,0" Width="100" Height="40" Content="1000" Foreground="White" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
     </Grid>
 </Window>
