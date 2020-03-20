@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetris_ScoreBoard"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" KeyDown="Window_KeyDown" Background="#FF202020">
+        Title="Tetris_ScoreBoard" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" KeyDown="Window_KeyDown" Background="#FF202020" Icon="Assets/controller.ico">
 
     <Window.Resources>
         <ImageBrush x:Key="play_on" ImageSource="Assets/play_on.png" Stretch="Fill"/>

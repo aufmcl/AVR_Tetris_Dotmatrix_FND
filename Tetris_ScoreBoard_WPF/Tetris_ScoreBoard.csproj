@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>controller.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -121,6 +124,12 @@
   <ItemGroup>
     <Resource Include="Assets\refresh_clicked.png" />
     <Resource Include="Assets\refresh_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\controller.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="controller.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
