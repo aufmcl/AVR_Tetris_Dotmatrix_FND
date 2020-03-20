@@ -39,8 +39,6 @@ const int block[7][4][8] = {
     {0x3c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
   },
 };
-unsigned long c_micros = 0;
-unsigned long p_micros = 0;
 unsigned long c_millis = 0;
 unsigned long p_millis = 0;
 unsigned short rotate = 0;
@@ -58,19 +56,25 @@ char key;
 
 
 void setup() {
-  //  TCCR1A = 0x00;
-  //  TCCR1B = 0x04;
-  //  TIMSK1 = 0x01;
-  //  TCNT1 = 100;
+  //===========================Timer setting
+  TCCR2A = 0x00;
+  TCCR2B = 0x05;
+  TIMSK2 = 0x00;
+  TCNT2 = 5;
+  //===========================
+
+  //===========================ADC setting
   ADMUX = 0x40;
   ADCSRA = 0x87;
-
-  //Serial.begin(9600);
+  //===========================
+  
+  //===========================USART setting
   UBRR0 = 103;    //9600 baudrate
   UCSR0A = 0x00;  //U2X = 0
   UCSR0B = 0x98;  //TX, RX enable
   UCSR0C = 0x06;  //Async, no Parity, 1 stop, 8bit
-
+  //===========================
+  
   for (int i = 0; i < 16; i++) {
     pinMode(i + 2, OUTPUT);
   }
@@ -178,20 +182,11 @@ void create_block() {
   }
 }
 
-
-
-//ISR(TIMER1_OVF_vect)
-//{
-//  TCNT1 = 100;
-//}
-
-
-
 void loop() {
   create_block();
+  TIMSK2 = 0x00;
 
   while (flag_start == true) {
-    c_micros = micros();
     c_millis = millis();
 
     //===========================Analog Read
@@ -312,6 +307,7 @@ void loop() {
         for (int j = 0; j < 8; j++) {
           if (show_block[j] == 0x7E) {
             UDR0 = 0x31;
+            TIMSK2 = 0x00;
 
             for (int i = j; i >= 0; i--) {
               show_block[i] = show_block[i - 1];
@@ -345,34 +341,8 @@ void loop() {
     //===========================
 
     //===========================2500 micros Delay
-    if (c_micros - p_micros > 2500) {
-      p_micros = c_micros;
+    TIMSK2 = 0x01;
 
-      for (int j = 0; j < 8; j++) {
-        digitalWrite(j + 10, HIGH);
-
-        //===========================DRAW BLOCK
-        for (int i = 0; i < 8; i++) {
-          if (show_block[j] & (0x80 >> i)) {
-            digitalWrite(i + 2 , LOW);
-          }
-          else {
-            digitalWrite(i + 2 , HIGH);
-          }
-        }
-        //===========================
-
-        //===========================OFF ALL
-        for (int i = 0; i < 16; i++) {
-          digitalWrite(i + 2, HIGH);
-
-          if (i >= 8) {
-            digitalWrite(i + 2, LOW);
-          }
-        }
-        //===========================
-      }
-    }
   }
 
   for (int i = 0; i < 8; i++) {
@@ -383,6 +353,38 @@ void loop() {
   }
   edge[7] = 0xFF;
 }
+
+ISR(TIMER2_OVF_vect)
+{
+  TCNT2 = 5;
+
+  for (int j = 0; j < 8; j++) {
+    digitalWrite(j + 10, HIGH);
+
+    //===========================DRAW BLOCK
+    for (int i = 0; i < 8; i++) {
+      if (show_block[j] & (0x80 >> i)) {
+        digitalWrite(i + 2 , LOW);
+      }
+      else {
+        digitalWrite(i + 2 , HIGH);
+      }
+    }
+    //===========================
+
+    //===========================OFF ALL
+    for (int i = 0; i < 16; i++) {
+      digitalWrite(i + 2, HIGH);
+
+      if (i >= 8) {
+        digitalWrite(i + 2, LOW);
+      }
+    }
+    //===========================
+  }
+
+}
+
 
 ISR(USART_RX_vect) {
   if (UCSR0A & 0x80) { // Serial.availabe()
