@@ -49,12 +49,10 @@ namespace Tetris_ScoreBoard
 
 
         int score_value = 0;
+        int max_score = 0;
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             int value = serialPort.ReadChar();
-
-
-            //else if (value == 71)
 
             if (!Dispatcher.CheckAccess())
             {
@@ -70,6 +68,13 @@ namespace Tetris_ScoreBoard
                     {
                         MessageBox.Show("Your score is " + score_value.ToString(), "Game over", MessageBoxButton.OK, MessageBoxImage.Warning);
                         Add_Item_Listview();
+                        if (score_value > max_score)
+                        {
+                            max_score = score_value;
+
+                            lb_BestScore.Content = max_score.ToString();
+                            lb_User.Content = txtbox_Name.Text;
+                        }
                         score_value = 0;
                     }
                 }));
@@ -157,10 +162,17 @@ namespace Tetris_ScoreBoard
         {
             ICollectionView dataView = CollectionViewSource.GetDefaultView(lstView.ItemsSource);
 
-            dataView.SortDescriptions.Clear();
-            SortDescription sd = new SortDescription(sortBy, direction);
-            dataView.SortDescriptions.Add(sd);
-            dataView.Refresh();
+            try
+            {
+                dataView.SortDescriptions.Clear();
+                SortDescription sd = new SortDescription(sortBy, direction);
+                dataView.SortDescriptions.Add(sd);
+                dataView.Refresh();
+            }
+            catch
+            {
+
+            }            
         }
 
         SerialPort serialPort = new SerialPort();
@@ -358,6 +370,11 @@ namespace Tetris_ScoreBoard
         private void txtbox_Name_GotMouseCapture(object sender, MouseEventArgs e)
         {
             txtbox_Name.Text = "";
+        }
+
+        private void btn_Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            lstView.Items.Refresh();
         }
     }
 }

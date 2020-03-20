@@ -12,6 +12,8 @@
         <ImageBrush x:Key="pause_on" ImageSource="Assets/pause_on.png" Stretch="Fill"/>
         <ImageBrush x:Key="play_clicked" ImageSource="Assets/play_clicked.png" Stretch="Fill"/>
         <ImageBrush x:Key="pause_clicked" ImageSource="Assets/pause_clicked.png" Stretch="Fill"/>
+        <ImageBrush x:Key="refresh_on" ImageSource="Assets/refresh_on.png" Stretch="Fill"/>
+        <ImageBrush x:Key="refresh_clicked" ImageSource="Assets/refresh_clicked.png" Stretch="Fill"/>
 
 
         <Style x:Key="FocusVisual">
@@ -110,6 +112,44 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="refreshStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource refresh_on}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource refresh_clicked}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -159,6 +199,12 @@
             </ListView.View>
         </ListView>
 
+        <Button x:Name="btn_Refresh" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="210,88,0,0" Width="30" Height="30" BorderThickness="0" Style="{DynamicResource refreshStyle}" Click="btn_Refresh_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="Assets/refresh.png" Stretch="Fill"/>
+            </Button.Background>
+        </Button>
+
         <TextBox x:Name="txtbox_Name" VerticalAlignment="Top" Height="30" Margin="272,82,322,0" TextWrapping="Wrap" Text="User name" Background="#00000000" BorderBrush="{x:Null}" Foreground="White" FontSize="22" Grid.ColumnSpan="2" GotMouseCapture="txtbox_Name_GotMouseCapture" />
         <Rectangle Fill="White" HorizontalAlignment="Left" Height="1" Margin="250,115,0,0" VerticalAlignment="Top" Width="250" Grid.ColumnSpan="2"/>
         <Image HorizontalAlignment="Left" Height="24" Margin="250,86,0,0" VerticalAlignment="Top" Width="20" Source="person.png" Stretch="Fill">
@@ -168,8 +214,8 @@
         </Image>
 
         <Label Name="lb_MText" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,162,0,0" Width="100" Height="50" Content="Rank.1" Foreground="White" FontSize="29" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"/>
-        <Label Name="lb_User" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,212,0,0" Width="100" Height="40" Content="aufmcl" Foreground="White" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Label Name="lb_BestScore" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,246,0,0" Width="100" Height="40" Content="1000" Foreground="White" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Name="lb_User" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,212,0,0" Width="100" Height="40" Content="None" Foreground="White" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Name="lb_BestScore" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="599,246,0,0" Width="100" Height="40" Content="0" Foreground="White" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
     </Grid>
 </Window>
